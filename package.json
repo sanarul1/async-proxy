@@ -1,0 +1,17 @@
+{
+  "name": "async-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "4.18.2",
+    "axios": "1.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.20"
+  },
+  "keywords": []
+}
