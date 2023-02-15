@@ -27,7 +27,7 @@ const cannedResponse = (req, res, next) => {
             canned.status = 400;
             canned.body.error = '[expected] param not specified';
         }
-        setTimeout(resolve, 100, canned);
+        setTimeout(resolve, 30000, canned);
     });
 };
 
