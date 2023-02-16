@@ -15,5 +15,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+USER appuser
+
 EXPOSE 3000
 CMD [ "node", "src/server.js" ]
