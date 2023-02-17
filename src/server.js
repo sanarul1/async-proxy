@@ -1,41 +1,34 @@
-
 const express = require('express');
 const app = express();
-const { proxy } = require('./proxy.js');
+var logger = require('morgan');
+const { bodyMapper } = require('./mapper');
+const { axiosConfig } = require('./axiosConfig');
+const { canned } = require('./canned');
+const { proxy } = require('./proxy');
 
-const port = 3000;
-
+app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.text());
 app.use(express.raw());
 
-const cannedResponse = (req, res, next) => {
-    return new Promise((resolve, reject) => {
-        let canned = {};
-        canned.body = {};
-        if (req.query.expected) {
-            if (req.query[req.query.expected]) {
-                canned.status = 200;
-                canned.body[req.query.expected] = req.query[req.query.expected];
-            } else {
-                canned.status = 400;
-                canned.body.error = req.query.expected + ' not found';
-            }
-        }
-        else {
-            canned.status = 400;
-            canned.body.error = '[expected] param not specified';
-        }
-        setTimeout(resolve, 30000, canned);
-    });
-};
+app.use(bodyMapper);
+app.use(axiosConfig);
+
+app.use((err, req, res, next) => {
+    console.log(err.message);
+    const body = {};
+    body.status = 400;
+    body.message = err.message;
+    res.status(400).send(body)
+});
 
 const handler = (req, res, next) => {
-    console.log('Proxying...')
-    const canned = cannedResponse(req, res, next);
-    const actual = proxy(req);
-    Promise.race([canned, actual])
+    console.log('Proxying...');
+
+    const cannedData = canned(req, res);
+    const actualData = proxy(req, res);
+    Promise.race([cannedData, actualData])
         .then((value) => {
             res.status(value.status).send(value.body);
         })
@@ -44,6 +37,4 @@ const handler = (req, res, next) => {
 
 app.all('/*', handler);
 
-app.listen(port, () => {
-    console.log(`Proxy app listening on port ${port}`);
-});
+module.exports = app;
