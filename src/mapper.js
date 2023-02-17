@@ -9,9 +9,28 @@ const isObject = (value) => {
     );
 };
 
+const extractor = (param) => {
+    const valArr = param.split(",");
+    let jsonStr = "{";
+    for (var i = 0; i < valArr.length; i++) {
+        const keyVal = valArr[i].split(":");
+        if (keyVal.length === 2) {
+            const fmt = "\"" + keyVal[0].trim() + "\":\"" + keyVal[1].trim() + "\"";
+            jsonStr += fmt;
+            if (i < valArr.length - 1) {
+                jsonStr += ",";
+            }
+        }
+    }
+    jsonStr += "}";
+    return jsonStr;
+};
+
 const mapper = (req, src, param) => {
     try {
-        const directive = JSON.parse(req.query[param]);
+        const jsonStr = extractor(req.query[param]);
+        console.log(jsonStr);
+        const directive = JSON.parse(jsonStr);
         let mapped = objectMapper(src, directive);
         return mapped;
     } catch (error) {
