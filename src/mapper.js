@@ -34,7 +34,7 @@ const mapper = (req, src, param) => {
         let mapped = objectMapper(src, directive);
         return mapped;
     } catch (error) {
-        throw new Error("[" + param + "] param must be stringified json");
+        throw new Error("[" + param + "] param's value e.g. - srcObj1.srcParam1: destObj1.destParam1, srcObj2.srcParam2: destObj2");
     }
 };
 
