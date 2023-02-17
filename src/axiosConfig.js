@@ -29,6 +29,7 @@ const filterObj = (obj, keyArr) => {
 const cloneActual = (req) => {
     const config = {};
     config.headers = {};
+    let path = '';
     let params = '';
     let query = '';
     if (req.query.proxyUrl) {
@@ -36,6 +37,8 @@ const cloneActual = (req) => {
         if (!valid) {
             throw new Error('[proxyUrl] param value is incorrect');
         }
+
+        path = (req.path == '/') ? '' : req.path;
 
         if (req.params) {
             params = '/' + Object.keys(req.params).map(function (key) {
@@ -52,7 +55,7 @@ const cloneActual = (req) => {
             }
         }
 
-        config.url = req.query.proxyUrl + params + query;
+        config.url = req.query.proxyUrl + path + params + query;
     } else {
         throw new Error('[proxyUrl] param not specified');
     }
