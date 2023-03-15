@@ -1,5 +1,6 @@
 const objectMapper = require('object-mapper');
 const merge = require("deepmerge");
+const { encrypt, validateAESEncrypt } = require("./aesEncrypt");
 
 const isObject = (value) => {
     return (
@@ -68,6 +69,9 @@ const actualBody = (req) => {
         if (mapped) {
             body = merge(body, mapped);
         }
+    }
+    if (validateAESEncrypt(req)) {
+        encrypt(req);
     }
     return body;
 };

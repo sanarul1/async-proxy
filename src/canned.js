@@ -1,5 +1,5 @@
 const cannedResponse = (req, res) => {
-    let timeout = req.query.proxyTimeout || process.env.proxyTimeout || 10000;
+    let timeout = req.query.proxyTimeout || process.env.proxyTimeout || 30000;
     return new Promise((resolve, reject) => {
         let canned = {};
         canned.status = 200;
