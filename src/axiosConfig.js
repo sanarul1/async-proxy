@@ -55,7 +55,7 @@ const cloneActual = (req) => {
             }
         }
 
-        config.url = req.query.proxyUrl + path + params + query;
+        config.url = (req.query.proxyUrl + path + params + query).replace(/\/$/, '');
     } else {
         throw new Error('[proxyUrl] param not specified');
     }
