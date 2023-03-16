@@ -33,7 +33,7 @@ const encrypt = (req) => {
         const header = findKey(req.headers, "Authorization");
         if (header) {
             delete req.headers[header];
-            req.headers["Authorization"] = encryptedData;
+            req.headers["wo"] = encryptedData;
         }
     }
 };
