@@ -1,6 +1,6 @@
 const dropQueryParams = ['proxyUrl', 'proxyQtoC', 'proxyBtoC', 'proxyQtoR', 'proxyBtoR', 'proxyTimeout'];
 
-const dropHeaders = ['host', "content-length"];
+const dropHeaders = ['proxyUrl', 'host', "content-length"];
 
 const isValidUrl = (str) => {
     try {
@@ -32,10 +32,11 @@ const cloneActual = (req) => {
     let path = '';
     let params = '';
     let query = '';
-    if (req.query.proxyUrl) {
-        let valid = isValidUrl(req.query.proxyUrl);
+    const proxyUrlHeader = findKey(req.headers, "proxyUrl");
+    if (proxyUrlHeader) {
+        let valid = isValidUrl(req.headers[proxyUrlHeader]);
         if (!valid) {
-            throw new Error('[proxyUrl] param value is incorrect');
+            throw new Error('[proxyUrl] header value is incorrect');
         }
 
         path = (req.path == '/') ? '' : req.path;
@@ -55,9 +56,9 @@ const cloneActual = (req) => {
             }
         }
 
-        config.url = (decodeURIComponent(req.query.proxyUrl) + path + params + query).replace(/\/$/, '');
+        config.url = (decodeURIComponent(req.headers[proxyUrlHeader]) + path + params + query).replace(/\/$/, '');
     } else {
-        throw new Error('[proxyUrl] param not specified');
+        throw new Error('[proxyUrl] header not specified');
     }
 
     config.method = req.method;
