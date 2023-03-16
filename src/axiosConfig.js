@@ -4,7 +4,7 @@ const dropHeaders = ['host', "content-length"];
 
 const isValidUrl = (str) => {
     try {
-        new URL(str);
+        new URL(decodeURIComponent(str));
         return true;
     } catch (err) {
         return false;
@@ -55,7 +55,7 @@ const cloneActual = (req) => {
             }
         }
 
-        config.url = (req.query.proxyUrl + path + params + query).replace(/\/$/, '');
+        config.url = (decodeURIComponent(req.query.proxyUrl) + path + params + query).replace(/\/$/, '');
     } else {
         throw new Error('[proxyUrl] param not specified');
     }
@@ -85,5 +85,8 @@ const axiosConfig = (req, res, next) => {
 };
 
 module.exports = {
-    axiosConfig: axiosConfig
+    axiosConfig: axiosConfig,
+    findKey: findKey,
+    filterObj: filterObj,
+    isValidUrl: isValidUrl
 };

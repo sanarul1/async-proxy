@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
-var logger = require('morgan');
+const logger = require('morgan');
+const cors = require('cors');
 const { bodyMapper } = require('./mapper');
 const { axiosConfig } = require('./axiosConfig');
 const { canned } = require('./canned');
 const { proxy } = require('./proxy');
 
 app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.text());
